@@ -101,10 +101,11 @@
             // Replace this URL with your actual deployed Vercel project URL
             let apiUrl = 'https://your-project-name.vercel.app/calculate'; 
 
-            fetch(apiUrl, {
-                method: 'POST',
-                body: formData
-            })
+            fetch('https://microscope-size-calc.vercel.app/api/calculate', {
+    method: 'POST',
+    body: formData
+})
+
             .then(response => response.json())
             .then(data => {
                 if (data.result) {
