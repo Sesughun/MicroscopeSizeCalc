@@ -94,29 +94,28 @@
 
     <script>
         document.getElementById('calculator-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            let formData = new FormData(this);
-            
-            // Replace this URL with your actual deployed Vercel project URL
-            let apiUrl = 'https://microscope-size-calc.vercel.api/calculate'; 
+    let formData = new FormData(this);
+    fetch('https://microscope-size-calc.vercel.app/api/calculate', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result) {
+            document.getElementById('result').textContent = data.result;
+            document.getElementById('error').textContent = '';
+        } else if (data.error) {
+            document.getElementById('error').textContent = data.error;
+            document.getElementById('result').textContent = '';
+        }
+    })
+    .catch(err => {
+        console.error('Error:', err);
+    });
+});
 
-            fetch('https://microscope-size-calc.vercel.app/api/calculate', {
-    method: 'POST',
-    body: formData
-})
-
-            .then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    document.getElementById('result').textContent = data.result;
-                    document.getElementById('error').textContent = '';
-                } else if (data.error) {
-                    document.getElementById('error').textContent = data.error;
-                    document.getElementById('result').textContent = '';
-                }
-            });
-        });
     </script>
 </body>
 </html>
