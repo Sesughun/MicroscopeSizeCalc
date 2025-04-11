@@ -97,7 +97,11 @@
             e.preventDefault();
 
             let formData = new FormData(this);
-            fetch('/calculate', {
+            
+            // Replace this URL with your actual deployed Vercel project URL
+            let apiUrl = 'https://your-project-name.vercel.app/calculate'; 
+
+            fetch(apiUrl, {
                 method: 'POST',
                 body: formData
             })
