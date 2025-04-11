@@ -1,19 +1,17 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
-CORS(app, origins="https://microscope-size-calc.vercel.app")  # Allow your frontend URL to make requests
+CORS(app, origins="https://microscope-size-calc.vercel.app")  # Allowing frontend domain
 
-@app.route('/calculate', methods=['POST'])
+@app.route('/api/calculate', methods=['POST'])
 def calculate():
     try:
-        # Get form data
         magnification = int(request.form['magnification'])
         mactual = request.form['mactual']
         msize = float(request.form['msize'])
         actual = request.form['actual']
-        
-        # Call the calculation function
         result = convert_size(mactual, actual, msize, magnification)
         return jsonify({"result": result})
 
