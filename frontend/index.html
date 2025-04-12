@@ -1,121 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microscope Size Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f9;
-        }
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #333;
-        }
-        .error {
-            color: red;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Microscope Size Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #FFC0CB;
+      color: #333;
+    }
+    label, input {
+      display: block;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+    #result, #error {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    #error {
+      color: red;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Microscope Size Calculator</h1>
-        <form id="calculator-form">
-            <label for="magnification">Enter magnification:</label>
-            <input type="number" id="magnification" name="magnification" required>
-            
-            <label for="mactual">Write a cell scale for microscope size:</label>
-            <select id="mactual" name="mactual" required>
-                <option value="m">m - meters</option>
-                <option value="cm">cm - centimeters</option>
-                <option value="mm">mm - millimeters</option>
-                <option value="um">um - micrometers</option>
-                <option value="nm">nm - nanometers</option>
-                <option value="pm">pm - picometers</option>
-            </select>
+  <h1>Microscope Size Calculator</h1>
+  <form id="calcForm">
+    <label>
+      Magnification:
+      <input type="number" step="any" name="magnification" required />
+    </label>
+    <label>
+      Actual Size (µm):
+      <input type="number" step="any" name="actual_size" required />
+    </label>
+    <button type="submit">Calculate</button>
+  </form>
+  <div id="result"></div>
+  <div id="error"></div>
 
-            <label for="msize">Enter microscope size:</label>
-            <input type="number" id="msize" name="msize" required>
+  <script>
+    document.getElementById("calcForm").addEventListener("submit", function (e) {
+      e.preventDefault();
 
-            <label for="actual">Write a cell scale for actual size:</label>
-            <select id="actual" name="actual" required>
-                <option value="m">m - meters</option>
-                <option value="cm">cm - centimeters</option>
-                <option value="mm">mm - millimeters</option>
-                <option value="um">um - micrometers</option>
-                <option value="nm">nm - nanometers</option>
-                <option value="pm">pm - picometers</option>
-            </select>
+      const formData = new FormData(this);
 
-            <button type="submit">Calculate</button>
-        </form>
-
-        <div id="result" class="result"></div>
-        <div id="error" class="error"></div>
-    </div>
-
-    <script>
-        document.getElementById('calculator-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    let formData = new FormData(this);
-    fetch('https://microscope-size-calc.vercel.app/api/calculate', {
-        method: 'POST',
+      fetch("/api/calculate", {
+        method: "POST",
         body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.result) {
-            document.getElementById('result').textContent = data.result;
-            document.getElementById('error').textContent = '';
-        } else if (data.error) {
-            document.getElementById('error').textContent = data.error;
-            document.getElementById('result').textContent = '';
-        }
-    })
-    .catch(err => {
-        console.error('Error:', err);
+      })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to fetch response");
+          return response.json();
+        })
+        .then(data => {
+          if (data.result) {
+            document.getElementById("result").textContent = data.result;
+            document.getElementById("error").textContent = "";
+          } else if (data.error) {
+            document.getElementById("error").textContent = data.error;
+            document.getElementById("result").textContent = "";
+          }
+        })
+        .catch(err => {
+          document.getElementById("error").textContent = "Something went wrong.";
+          console.error("Error:", err);
+        });
     });
-});
-
-    </script>
+  </script>
 </body>
 </html>
