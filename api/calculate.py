@@ -1,42 +1,22 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-import os
 
 app = Flask(__name__)
-CORS(app, origins="https://microscope-size-calc.vercel.app")  # Allowing frontend domain
 
-@app.route('/api/calculate', methods=['POST'])
+@app.route("/api/calculate", methods=["POST"])
 def calculate():
     try:
-        magnification = int(request.form['magnification'])
-        mactual = request.form['mactual']
-        msize = float(request.form['msize'])
-        actual = request.form['actual']
-        result = convert_size(mactual, actual, msize, magnification)
-        return jsonify({"result": result})
+        magnification = float(request.form.get("magnification", 0))
+        actual_size = float(request.form.get("actual_size", 0))
+
+        if magnification == 0:
+            return jsonify({"error": "Magnification cannot be zero."}), 400
+
+        image_size = magnification * actual_size
+        return jsonify({"result": f"{image_size:.2f} µm"})
 
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)}), 400
 
-def convert_size(from_unit: str, to_unit: str, msize: float, magnification: int) -> float:
-    units_in_meters = {
-        'm': 1,
-        'cm': 1e-2,
-        'mm': 1e-3,
-        'um': 1e-6,
-        'nm': 1e-9,
-        'pm': 1e-12,
-    }
-
-    if from_unit == to_unit:
-        raise ValueError("Units must be different")
-
-    if from_unit not in units_in_meters or to_unit not in units_in_meters:
-        raise ValueError("Unsupported units. Use: 'm', 'cm', 'mm', 'um', 'nm', 'pm'")
-
-    factor = units_in_meters[from_unit] / units_in_meters[to_unit]
-    size = (msize / magnification) * factor
-    return f"Actual size: {size} {to_unit}"
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+@app.route("/api/calculate", methods=["GET", "PUT", "DELETE", "PATCH"])
+def method_not_allowed():
+    return jsonify({"error": "Method Not Allowed"}), 405
