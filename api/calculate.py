@@ -3,7 +3,7 @@ from flask_cors import CORS
 import os
 
 app = Flask(__name__)
-CORS(app, origins="https://microscope-size-calc.vercel.app")
+CORS(app, origins="https://microscope-size-calc-git-test-1-sesughuns-projects.vercel.app")
 
 @app.route('/api/calculate', methods=['POST'])
 def calculate():
