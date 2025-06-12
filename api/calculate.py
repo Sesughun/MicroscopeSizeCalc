@@ -29,20 +29,22 @@ def calculate():
         if mactual not in UNIT_TO_UM or actual not in UNIT_TO_UM:
             return jsonify({"error": "Invalid unit selected."}), 400
 
-        # Convert microscope size to micrometers
-        size_in_um = msize * UNIT_TO_UM[mactual]
+        # Step 1: Get actual size in input units
+        actual_size_in_input_unit = msize / magnification
 
-        # Calculate image size (magnification is unitless)
-        image_size = magnification * size_in_um
+        # Step 2: Convert actual size to µm
+        actual_size_um = actual_size_in_input_unit * UNIT_TO_UM[mactual]
 
-        # Return result in the unit selected for 'actual'
-        result_in_selected_unit = image_size / UNIT_TO_UM[actual]
+        # Step 3: Convert µm to desired output unit
+        result_in_selected_unit = actual_size_um / UNIT_TO_UM[actual]
+
         return jsonify({"result": f"{result_in_selected_unit:.2f} {actual}"})
 
     except ValueError:
         return jsonify({"error": "Invalid input. Please enter numeric values."}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
 
 @app.route("/api/calculate", methods=["GET", "PUT", "DELETE", "PATCH"])
 def method_not_allowed():
