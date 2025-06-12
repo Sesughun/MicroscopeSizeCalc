@@ -1,130 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microscope Size Calculator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffe4e1; /* Light pink background */
-        }
-        .container {
-            width: 50%;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff0f5; /* Pale pink container */
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            text-align: center;
-            color: #c71585; /* Medium violet red for heading */
-        }
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-            color: #333; /* Dark gray for contrast */
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ff69b4; /* Hot pink border */
-            border-radius: 4px;
-            background-color: #fff; /* White background for inputs */
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #ff69b4; /* Hot pink button */
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #ff1493; /* Deep pink on hover */
-        }
-        .result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #c71585; /* Medium violet red for result text */
-        }
-        .error {
-            color: #b22222; /* Firebrick red for error text */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Microscope Size Calculator</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #2c3e50, #bdc3c7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      color: #fff;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      color: #f1f1f1;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 12px;
+      display: block;
+      color: #ffffffcc;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 16px;
+      border: none;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 1em;
+      backdrop-filter: blur(5px);
+    }
+select {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 1em;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+}
+
+select option {
+  background-color: #ffffff;
+  color: #333;
+}
+
+
+    input:focus, select:focus {
+      outline: 2px solid #ff4b5c;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #ff4b5c;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ff1e3c;
+    }
+
+    .result, .error {
+      text-align: center;
+      font-size: 1.1em;
+      margin-top: 16px;
+    }
+
+    .result {
+      color: #00ffcc;
+    }
+
+    .error {
+      color: #ffaaaa;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Microscope Size Calculator</h1>
-        <form id="calculator-form">
-            <label for="magnification">Enter magnification:</label>
-            <input type="number" id="magnification" name="magnification" required>
-            
-            <label for="mactual">Write a cell scale for microscope size:</label>
-            <select id="mactual" name="mactual" required>
-                <option value="m">m - meters</option>
-                <option value="cm">cm - centimeters</option>
-                <option value="mm">mm - millimeters</option>
-                <option value="um">um - micrometers</option>
-                <option value="nm">nm - nanometers</option>
-                <option value="pm">pm - picometers</option>
-            </select>
+  <div class="container">
+    <h1>Microscope Size Calculator</h1>
+    <form id="calculator-form">
+      <label for="magnification">Enter magnification:</label>
+      <input type="number" id="magnification" name="magnification" required />
 
-            <label for="msize">Enter microscope size:</label>
-            <input type="number" id="msize" name="msize" required>
+      <label for="mactual">Write a cell scale for microscope size:</label>
+      <select id="mactual" name="mactual" required>
+        <option value="m">m - meters</option>
+        <option value="cm">cm - centimeters</option>
+        <option value="mm">mm - millimeters</option>
+        <option value="um">um - micrometers</option>
+        <option value="nm">nm - nanometers</option>
+        <option value="pm">pm - picometers</option>
+      </select>
 
-            <label for="actual">Write a cell scale for actual size:</label>
-            <select id="actual" name="actual" required>
-                <option value="m">m - meters</option>
-                <option value="cm">cm - centimeters</option>
-                <option value="mm">mm - millimeters</option>
-                <option value="um">um - micrometers</option>
-                <option value="nm">nm - nanometers</option>
-                <option value="pm">pm - picometers</option>
-            </select>
+      <label for="msize">Enter microscope size:</label>
+      <input type="number" id="msize" name="msize" required />
 
-            <button type="submit">Calculate</button>
-        </form>
+      <label for="actual">Write a cell scale for actual size:</label>
+      <select id="actual" name="actual" required>
+        <option value="m">m - meters</option>
+        <option value="cm">cm - centimeters</option>
+        <option value="mm">mm - millimeters</option>
+        <option value="um">um - micrometers</option>
+        <option value="nm">nm - nanometers</option>
+        <option value="pm">pm - picometers</option>
+      </select>
 
-        <div id="result" class="result"></div>
-        <div id="error" class="error"></div>
-    </div>
+      <button type="submit">Calculate</button>
+    </form>
 
-    <script>
-        document.getElementById('calculator-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+    <div id="result" class="result"></div>
+    <div id="error" class="error"></div>
+  </div>
 
-            let formData = new FormData(this);
-            fetch('https://microscope-size-calc.vercel.app/api/calculate', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.result) {
-                    document.getElementById('result').textContent = data.result;
-                    document.getElementById('error').textContent = '';
-                } else if (data.error) {
-                    document.getElementById('error').textContent = data.error;
-                    document.getElementById('result').textContent = '';
-                }
-            })
-            .catch(err => {
-                document.getElementById('error').textContent = `Error: ${err.message}`;
-                document.getElementById('result').textContent = '';
-                console.error('Error:', err);
-            });
+  <script>
+    document.getElementById('calculator-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      let formData = new FormData(this);
+      fetch('https://microscope-size-calc.vercel.app/api/calculate', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((data) => {
+          if (data.result) {
+            document.getElementById('result').textContent = data.result;
+            document.getElementById('error').textContent = '';
+          } else if (data.error) {
+            document.getElementById('error').textContent = data.error;
+            document.getElementById('result').textContent = '';
+          }
+        })
+        .catch((err) => {
+          document.getElementById('error').textContent = `Error: ${err.message}`;
+          document.getElementById('result').textContent = '';
+          console.error('Error:', err);
         });
-    </script>
+    });
+  </script>
 </body>
 </html>
